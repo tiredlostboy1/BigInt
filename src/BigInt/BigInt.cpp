@@ -6,10 +6,10 @@
 namespace ACA
 {
 
-    BigInt::BigInt(const std::string &s)
+    BigInt::BigInt(std::string &s)
     {
         digits.reserve(s.length());
-        for (char &i : s)
+        for (const char &i : s)
         {
             if (isdigit(i))
             {
@@ -37,15 +37,6 @@ namespace ACA
         digits = other.digits;
         return *this;
     }
-
-    /*
-    BigInt& BigInt::operator=(BigInt other) noexcept
-    {
-        // exchange resources between *this and other
-        std::swap(digits, other.digits);
-        return *this;
-    }
-    */
 
     bool operator==(const BigInt &lhs, const BigInt &rhs)
     {
@@ -94,7 +85,7 @@ namespace ACA
         return *this;
     }
 
-    BigInt BigInt::operator++(int /* tmp */)
+    BigInt BigInt::operator++(int)
     {
         BigInt old = *this;
         operator++(); // prefix increment
@@ -107,7 +98,7 @@ namespace ACA
         return *this;
     }
 
-    BigInt BigInt::operator--(int /* tmp */)
+    BigInt BigInt::operator--(int)
     {
         BigInt old = *this;
         operator--(); // prefix decrement
@@ -315,7 +306,7 @@ namespace ACA
                     tmp -= rhs;
                     count++;
                 }
-                result += to_string(count);
+                result += std::to_string(count);
                 tmp.digits += digits[i];
             }
         }
@@ -326,7 +317,7 @@ namespace ACA
             tmp -= rhs;
             count++;
         }
-        result += to_string(count);
+        result += std::to_string(count);
 
         *this = result;
         return *this;
@@ -403,7 +394,7 @@ namespace ACA
         return lhs;
     }
 
-    istream &operator>>(istream &in, BigInt &a)
+    std::istream &operator>>(std::istream &in, BigInt &a)
     {
         std::string input;
         in >> input;
@@ -411,9 +402,9 @@ namespace ACA
         return in;
     }
 
-    ostream &operator<<(ostream &out, const BigInt &a)
+    std::ostream &operator<<(std::ostream &out, const BigInt &a)
     {
-        out << a.toString();
+        out << a.std::toString();
         return out;
     }
 

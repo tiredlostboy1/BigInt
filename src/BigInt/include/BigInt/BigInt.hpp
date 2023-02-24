@@ -32,6 +32,7 @@ public:
 private:
     std::string digits;
     std::size_t size = 0;
-}; // namespace ACA
+};
+} // namespace ACA
 
 #endif

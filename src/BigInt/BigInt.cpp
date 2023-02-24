@@ -3,21 +3,20 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
-
 namespace ACA
 {
 
     BigInt::BigInt(const std::string &s)
     {
         digits.reserve(s.length());
-        for (auto &i : s)
+        for (char &i : s)
         {
-            if (isdigit(s[i]))
+            if (isdigit(i))
             {
-                digits.push_back(s[i]);
+                digits.push_back(i);
             }
         }
+        size = digits.length();
     }
 
     BigInt::BigInt(unsigned long long nr) : digits{std::to_string(nr)}
@@ -60,11 +59,11 @@ namespace ACA
 
     bool operator<(const BigInt &lhs, const BigInt &rhs)
     {
-        if (lhs.size() != rhs.size())
+        if (lhs.size != rhs.size)
         {
-            return lhs.size() < rhs.size();
+            return lhs.size < rhs.size;
         }
-        for (std::size_t i = 0; i < lhs.size(); i++)
+        for (std::size_t i = 0; i < lhs.size; i++)
         {
             if (lhs.digits[i] != rhs.digits[i])
             {
@@ -158,58 +157,61 @@ namespace ACA
     }
 
     BigInt &BigInt::operator-=(const BigInt &rhs)
-{
-    if (*this < rhs)
     {
-        throw("This will give a negative value");
-    }
-    if (*this == rhs)
-    {
-        digits = "0";
-    }
-    else
-    {
-        std::size_t j = rhs.digits.length() - 1;
-        std::size_t tmp = 0;
-        bool isPos;
-        for (std::size_t i = digits.length() - 1; i >= 0; --i)
+        if (*this < rhs)
         {
-            if (j >= 0)
+            throw std::runtime_error("This will give a negative value");
+        }
+        if (*this == rhs || rhs.digits == "0")
+        {
+            digits = "0";
+        }
+        else
+        {
+            digits.clear();
+            digits.reserve(size);
+
+            std::size_t j = rhs.digits.length() - 1;
+            std::size_t tmp = 0;
+            bool isPos;
+            for (std::size_t i = digits.length() - 1; i != -1; --i)
             {
-                if ((digits[i] - rhs.digits[j] - tmp) >= 0)
+                if (j >= 0)
+                {
+                    if ((digits[i] - rhs.digits[j] - tmp) >= 0)
+                    {
+                        isPos = true;
+                        digits[i] = digits[i] - rhs.digits[j] - tmp + '0';
+                    }
+                    else
+                    {
+                        isPos = false;
+                        digits[i] = digits[i] - rhs.digits[j] - tmp + 10 + '0';
+                    }
+                    j--;
+                }
+                else if ((digits[i] - tmp) >= '0')
                 {
                     isPos = true;
-                    digits[i] = digits[i] - rhs.digits[j] - tmp + '0';
+                    digits[i] = digits[i] - tmp;
                 }
                 else
                 {
                     isPos = false;
-                    digits[i] = digits[i] - rhs.digits[j] - tmp + 10 + '0';
+                    digits[i] = digits[i] - tmp + 10;
                 }
-                j--;
+                tmp = isPos ? 0 : 1;
             }
-            else if ((digits[i] - tmp) >= '0')
+            std::size_t i = 0;
+            while (digits[i] == '0')
             {
-                isPos = true;
-                digits[i] = digits[i] - tmp;
+                i++;
             }
-            else
-            {
-                isPos = false;
-                digits[i] = digits[i] - tmp + 10;
-            }
-            tmp = isPos ? 0 : 1;
+            digits = digits.substr(i);
         }
-        std::size_t i = 0;
-        while (digits[i] == '0')
-        {
-            i++;
-        }
-        digits = digits.substr(i);
-    }
 
-    return *this;
-}
+        return *this;
+    }
 
     BigInt operator-(BigInt lhs, const BigInt &rhs)
     {
@@ -222,7 +224,7 @@ namespace ACA
         std::string str = digits;
         std::reverse(str.begin(), str.end());
         std::size_t tmp = 0;
-        for (std::size_t i = 0; i < str.length(); i++)
+        for (std::size_t i = digits.length() - 1; i > 0; --i)
         {
             std::size_t mul = (str[i] - '0') * (c - '0') + tmp;
             str[i] = (mul % 10) + '0';

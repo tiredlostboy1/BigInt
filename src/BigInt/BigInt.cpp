@@ -57,20 +57,20 @@ namespace ACA
     }
 
     bool operator<(const BigInt &lhs, const BigInt &rhs)
-{
-    if (lhs.size() != rhs.size())
     {
-        return lhs.size() < rhs.size();
-    }
-    for (std::size_t i = lhs.digits.length() - 1; i != -1; --i)
-    {
-        if (lhs.digits[i] != rhs.digits[i])
+        if (lhs.size() != rhs.size())
         {
-            return lhs.digits[i] < rhs.digits[i];
+            return lhs.size() < rhs.size();
         }
+        for (std::size_t i = 0; i < lhs.digits.length(); ++i)
+        {
+            if (lhs.digits[i] != rhs.digits[i])
+            {
+                return lhs.digits[i] < rhs.digits[i];
+            }
+        }
+        return false;
     }
-    return false;
-}
 
     bool operator>(const BigInt &lhs, const BigInt &rhs)
     {
@@ -125,7 +125,7 @@ namespace ACA
         std::size_t j = rl - 1;
         std::size_t sum;
         std::size_t tmp = 0;
-        for (std::size_t i = 0; i < digits.length(); i++)
+        for (std::size_t i = 0; i < digits.size(); i++)
         {
             if (j >= 0)
             {

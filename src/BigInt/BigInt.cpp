@@ -2,11 +2,12 @@
 
 #include <iostream>
 #include <vector>
+#include <exception>
 
 namespace ACA
 {
 
-    BigInt::BigInt(std::string &s)
+    BigInt::BigInt(const std::string &s)
     {
         digits.reserve(s.length());
         for (const char &i : s)
@@ -16,7 +17,6 @@ namespace ACA
                 digits.push_back(i);
             }
         }
-        size = digits.length();
     }
 
     BigInt::BigInt(unsigned long long nr) : digits{std::to_string(nr)}
@@ -50,11 +50,11 @@ namespace ACA
 
     bool operator<(const BigInt &lhs, const BigInt &rhs)
     {
-        if (lhs.size != rhs.size)
+        if (lhs.size() != rhs.size())
         {
-            return lhs.size < rhs.size;
+            return lhs.size() < rhs.size();
         }
-        for (std::size_t i = 0; i < lhs.size; i++)
+        for (std::size_t i = 0; i < lhs.size(); i++)
         {
             if (lhs.digits[i] != rhs.digits[i])
             {
@@ -160,7 +160,7 @@ namespace ACA
         else
         {
             digits.clear();
-            digits.reserve(size);
+            digits.reserve(size());
 
             std::size_t j = rhs.digits.length() - 1;
             std::size_t tmp = 0;
@@ -375,7 +375,7 @@ namespace ACA
         BigInt b = rhs;
         BigInt a = *this;
         digits = "1";
-        BigInt two("2");
+        BigInt two(2);
         while (b.digits != "0")
         {
             if ((b.digits[b.digits.length() - 1] - '0') & 1 == 1)
@@ -404,8 +404,8 @@ namespace ACA
 
     std::ostream &operator<<(std::ostream &out, const BigInt &a)
     {
-        out << a.std::toString();
-        return out;
+        out << a.digits;
+		return out;
     }
 
 } // namespace ACA

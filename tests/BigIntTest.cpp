@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "BigInt.h"
+#include "BigInt/BigInt.hpp"
 
 TEST(BigIntTest, Constructors) {
   ACA::BigInt a;          // Default constructor
@@ -73,4 +73,8 @@ TEST(BigIntTest, SubtractionOperator) {
   ACA::BigInt d("1");
 
   EXPECT_EQ(c - d, ACA::BigInt("999999999999999999"));
+}
+
+int main(){
+return 0;
 }

@@ -10,16 +10,17 @@ class BigInt
 {
 public:
     BigInt() = default;
-    BigInt(std::string& s);
+    BigInt(const std::string& s);
     BigInt(unsigned long long nr);
     BigInt(const BigInt& other);
+    std::size_t size() const { return digits.size();}
     BigInt& operator=(const BigInt& other);
-    bool operator==(const BigInt& rhs) const;
-    bool operator!=(const BigInt& rhs) const;
-    bool operator<(const BigInt& rhs) const;
-    bool operator>(const BigInt& rhs) const;
-    bool operator<=(const BigInt& rhs) const;
-    bool operator>=(const BigInt& rhs) const;
+    friend bool operator==(const BigInt &lhs, const BigInt &rhs);
+    friend bool operator!=(const BigInt &lhs, const BigInt &rhs);
+    friend bool operator<(const BigInt &lhs, const BigInt &rhs);
+    friend bool operator>(const BigInt &lhs, const BigInt &rhs);
+    friend bool operator>=(const BigInt &lhs, const BigInt &rhs);
+    friend bool operator<=(const BigInt &lhs, const BigInt &rhs);
     BigInt& operator++();
     BigInt operator++(int);
     BigInt& operator--();
@@ -30,20 +31,19 @@ public:
     friend BigInt operator-(BigInt lhs, const BigInt& rhs);
     BigInt mul(char c) const;
     BigInt &operator*=(const BigInt &rhs);
-    BigInt operator*(BigInt lhs, const BigInt &rhs);
+    friend BigInt operator*(BigInt lhs, const BigInt &rhs);
     BigInt div(char c) const;
     BigInt &operator/=(const BigInt &rhs);
-    BigInt operator/(BigInt lhs, const BigInt &rhs);
+    friend BigInt operator/(BigInt lhs, const BigInt &rhs);
     BigInt &operator%=(const BigInt &rhs);
-    BigInt operator%(BigInt lhs, const BigInt &rhs);
+    friend BigInt operator%(BigInt lhs, const BigInt &rhs);
     BigInt &operator^=(const BigInt &rhs);
-    BigInt operator^(BigInt lhs, const BigInt &rhs);
+    friend BigInt operator^(BigInt lhs, const BigInt &rhs);
 
     friend std::istream &operator>>(std::istream &in, BigInt &a);
     friend std::ostream &operator<<(std::ostream &out, const BigInt &a);
 private:
     std::string digits;
-    std::size_t size = 0;
 };
 } // namespace ACA
 

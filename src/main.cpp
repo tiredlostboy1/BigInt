@@ -1,13 +1,13 @@
-#include <BigInt/BigInt.h>
+#include <BigInt/BigInt.hpp>
 
 #include <iostream>
+#include <string>
 
 using namespace ACA;
-using namespace std;
 
 int main()
 {
-	BigInt first(string("12345"));
+	BigInt first(std::string("12345"));
     BigInt second(12934);
 
     BigInt third(second);
@@ -24,7 +24,7 @@ int main()
     BigInt sixth = (1 + second);
 
 
-	cout << "first = " << first << " second = " << second 
+	std::cout << "first = " << first << " second = " << second 
     << " third = " << third << " forth = " << forth 
     << " fifth = " << fifth << " sixth = " << sixth;
 

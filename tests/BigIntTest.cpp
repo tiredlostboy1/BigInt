@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "BigInt/BigInt.hpp"
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables, cppcoreguidelines-owning-memory)
+
 TEST(BigIntTest, Constructors) {
   ACA::BigInt a;          // Default constructor
   ACA::BigInt b("1234");  // String constructor
@@ -74,6 +76,8 @@ TEST(BigIntTest, SubtractionOperator) {
 
   EXPECT_EQ(c - d, ACA::BigInt("999999999999999999"));
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables, cppcoreguidelines-owning-memory)
 
 int main(int argc, char **argv)
 {

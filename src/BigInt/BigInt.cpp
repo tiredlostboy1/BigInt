@@ -7,6 +7,8 @@
 namespace ACA
 {
 
+    BigInt::BigInt() : digits{"0"} {};
+
     BigInt::BigInt(const std::string &s)
     {
         digits.reserve(s.length());
@@ -14,13 +16,19 @@ namespace ACA
         {
             if (isdigit(i))
             {
-                digits.push_back(i);
+                digits.push_back(i - '0');
+            }
+            else
+            {
+                throw std::invalid_argument("Invalid character in string");
             }
         }
     }
 
-    BigInt::BigInt(unsigned long long nr) : digits{std::to_string(nr)}
+    BigInt::BigInt(unsigned long long nr)
     {
+        std::string str = std::to_string(nr);
+        digits = str;
     }
 
     BigInt::BigInt(const BigInt &other) : digits{other.digits}
@@ -49,20 +57,20 @@ namespace ACA
     }
 
     bool operator<(const BigInt &lhs, const BigInt &rhs)
+{
+    if (lhs.size() != rhs.size())
     {
-        if (lhs.size() != rhs.size())
-        {
-            return lhs.size() < rhs.size();
-        }
-        for (std::size_t i = 0; i < lhs.size(); i++)
-        {
-            if (lhs.digits[i] != rhs.digits[i])
-            {
-                return lhs.digits[i] < rhs.digits[i];
-            }
-        }
-        return false;
+        return lhs.size() < rhs.size();
     }
+    for (std::size_t i = lhs.digits.length() - 1; i != -1; --i)
+    {
+        if (lhs.digits[i] != rhs.digits[i])
+        {
+            return lhs.digits[i] < rhs.digits[i];
+        }
+    }
+    return false;
+}
 
     bool operator>(const BigInt &lhs, const BigInt &rhs)
     {
@@ -151,61 +159,50 @@ namespace ACA
     {
         if (*this < rhs)
         {
-            throw std::runtime_error("This will give a negative value");
+            throw std::runtime_error("Subtraction will give a negative value");
         }
-        if (*this == rhs || rhs.digits == "0")
+        if (rhs.digits == "0")
         {
-            digits = "0";
+            return *this;
         }
-        else
+        digits.reserve(std::max(digits.length(), rhs.digits.length()));
+
+        std::size_t i = digits.length() - 1, j = rhs.digits.length() - 1;
+        int tmp = 0;
+        while (i != -1 || j != -1)
         {
-            digits.clear();
-            digits.reserve(size());
-
-            std::size_t j = rhs.digits.length() - 1;
-            std::size_t tmp = 0;
-            bool isPos;
-            for (std::size_t i = digits.length() - 1; i != -1; --i)
+            int diff = tmp;
+            if (i != -1)
             {
-                if (j >= 0)
-                {
-                    if ((digits[i] - rhs.digits[j] - tmp) >= 0)
-                    {
-                        isPos = true;
-                        digits[i] = digits[i] - rhs.digits[j] - tmp + '0';
-                    }
-                    else
-                    {
-                        isPos = false;
-                        digits[i] = digits[i] - rhs.digits[j] - tmp + 10 + '0';
-                    }
-                    j--;
-                }
-                else if ((digits[i] - tmp) >= '0')
-                {
-                    isPos = true;
-                    digits[i] = digits[i] - tmp;
-                }
-                else
-                {
-                    isPos = false;
-                    digits[i] = digits[i] - tmp + 10;
-                }
-                tmp = isPos ? 0 : 1;
+                diff += digits[i] - '0';
+                i--;
             }
-            std::size_t i = 0;
-            while (digits[i] == '0')
+            if (j != -1)
             {
-                i++;
+                diff -= rhs.digits[j] - '0';
+                j--;
             }
-            digits = digits.substr(i);
+            if (diff >= 0)
+            {
+                digits.push_back(diff + '0');
+                tmp = 0;
+            }
+            else
+            {
+                digits.push_back(diff + 10 + '0');
+                tmp = 1;
+            }
         }
-
+        while (digits.size() > 1 && digits.back() == '0')
+        {
+            digits.pop_back();
+        }
         return *this;
     }
 
     BigInt operator-(BigInt lhs, const BigInt &rhs)
     {
+
         lhs -= rhs;
         return lhs;
     }
@@ -405,7 +402,7 @@ namespace ACA
     std::ostream &operator<<(std::ostream &out, const BigInt &a)
     {
         out << a.digits;
-		return out;
+        return out;
     }
 
 } // namespace ACA
